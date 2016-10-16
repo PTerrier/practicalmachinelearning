@@ -5,22 +5,47 @@ date: "16 octobre 2016"
 output: html_document
 ---
 
-## R Markdown
+# URL of data as provided
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+train.url ="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+test.url = "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# download files
 
-```{r cars}
-summary(cars)
-```
+download.file(train.url, destfile="C:/Users/utilisateur/Documents/Stability_R/train.csv", method="auto")
+download.file(test.url, destfile="C:/Users/utilisateur/Documents/Stability_R/test.csv", method="auto")
 
-## Including Plots
+# load files
+raw_train<-read.csv("C:/Users/utilisateur/Documents/Stability_R/train.csv")
+raw_test<-read.csv("C:/Users/utilisateur/Documents/Stability_R/test.csv")
 
-You can also embed plots, for example:
+# clean data: 1) removing NA
+many.NA<-sapply(raw_train,function(x) mean(is.na(x))) >0.95
+train<-raw_train[,many.NA==FALSE]
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+# clean data: 2) removing column 1-5 (not relevant)
+train<-train[,-(1:5)]
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# clean data: 3) removing predictors with low variance
+zero.var<-nearZeroVar(train)
+train<-train[,-zero.var]
+
+# 54 variables remaining
+
+# data spliting
+inTrain<- createDataPartition(y=train$classe, p=0.7, list=FALSE)
+tr<-train[inTrain,]
+te<-train[-inTrain,]
+
+# random forest with standard control
+modFit<- train(classe ~., data=tr,method="rf")
+
+
+
+
+
+
+
+ 
+
+
