@@ -128,15 +128,18 @@ $(document).ready(function () {
 </div>
 <div id="download-files" class="section level1">
 <h1>download files</h1>
-<p>download.file(train.url, destfile=“C:/Users/utilisateur/Documents/Stability_R/train.csv”, method=“auto”) download.file(test.url, destfile=“C:/Users/utilisateur/Documents/Stability_R/test.csv”, method=“auto”)</p>
+<p>download.file(train.url, destfile=“C:/Users/utilisateur/Documents/Stability_R/train.csv”, method=“auto”)</p>
+<p>download.file(test.url, destfile=“C:/Users/utilisateur/Documents/Stability_R/test.csv”, method=“auto”)</p>
 </div>
 <div id="load-files" class="section level1">
 <h1>load files</h1>
-<p>raw_train&lt;-read.csv(“C:/Users/utilisateur/Documents/Stability_R/train.csv”) raw_test&lt;-read.csv(“C:/Users/utilisateur/Documents/Stability_R/test.csv”)</p>
+<p>raw_train&lt;-read.csv(“C:/Users/utilisateur/Documents/Stability_R/train.csv”)</p>
+<p>raw_test&lt;-read.csv(“C:/Users/utilisateur/Documents/Stability_R/test.csv”)</p>
 </div>
 <div id="clean-data-1-removing-na" class="section level1">
 <h1>clean data: 1) removing NA</h1>
-<p>many.NA&lt;-sapply(raw_train,function(x) mean(is.na(x))) &gt;0.95 train&lt;-raw_train[,many.NA==FALSE]</p>
+<p>many.NA&lt;-sapply(raw_train,function(x) mean(is.na(x))) &gt;0.95</p>
+<p>train&lt;-raw_train[,many.NA==FALSE]</p>
 </div>
 <div id="clean-data-2-removing-column-1-5-not-relevant" class="section level1">
 <h1>clean data: 2) removing column 1-5 (not relevant)</h1>
@@ -144,18 +147,37 @@ $(document).ready(function () {
 </div>
 <div id="clean-data-3-removing-predictors-with-low-variance" class="section level1">
 <h1>clean data: 3) removing predictors with low variance</h1>
-<p>zero.var&lt;-nearZeroVar(train) train&lt;-train[,-zero.var]</p>
+<p>zero.var&lt;-nearZeroVar(train)</p>
+<p>train&lt;-train[,-zero.var]</p>
 </div>
 <div id="variables-remaining" class="section level1">
 <h1>54 variables remaining</h1>
 </div>
 <div id="data-spliting" class="section level1">
 <h1>data spliting</h1>
-<p>inTrain&lt;- createDataPartition(y=train$classe, p=0.7, list=FALSE) tr&lt;-train[inTrain,] te&lt;-train[-inTrain,]</p>
+<p>inTrain&lt;- createDataPartition(y=train$classe, p=0.7, list=FALSE)</p>
+<p>tr&lt;-train[inTrain,]</p>
+<p>te&lt;-train[-inTrain,]</p>
 </div>
-<div id="random-forest-with-standard-control" class="section level1">
-<h1>random forest with standard control</h1>
+<div id="random-forest-with-standard-control-be-patient" class="section level1">
+<h1>random forest with standard control (be patient)</h1>
 <p>modFit&lt;- train(classe ~., data=tr,method=“rf”)</p>
+</div>
+<div id="modfitfinalmodel-indicate-error-rate-0.18" class="section level1">
+<h1>modFit$finalModel indicate error rate 0.18%</h1>
+</div>
+<div id="predict-the-test-set" class="section level1">
+<h1>predict the test set</h1>
+<p>pred&lt;-predict(modFit,data=raw_test)</p>
+</div>
+<div id="convert-to-character" class="section level1">
+<h1>convert to character</h1>
+</div>
+<div id="predicted-sequence-for-the-20-subjects-b-a-b-a-a-e-d-b-a-a-b-c-b-a-e-e-a-b-b-b" class="section level1">
+<h1>predicted sequence for the 20 subjects: “B” “A” “B” “A” “A” “E” “D” “B” “A” “A” “B” “C” “B” “A” “E” “E” “A” “B” “B” “B”</h1>
+</div>
+<div id="done" class="section level1">
+<h1>done</h1>
 </div>
 
 

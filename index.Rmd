@@ -13,35 +13,53 @@ test.url = "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
 # download files
 
 download.file(train.url, destfile="C:/Users/utilisateur/Documents/Stability_R/train.csv", method="auto")
+
 download.file(test.url, destfile="C:/Users/utilisateur/Documents/Stability_R/test.csv", method="auto")
 
 # load files
+
 raw_train<-read.csv("C:/Users/utilisateur/Documents/Stability_R/train.csv")
+
 raw_test<-read.csv("C:/Users/utilisateur/Documents/Stability_R/test.csv")
 
 # clean data: 1) removing NA
+
 many.NA<-sapply(raw_train,function(x) mean(is.na(x))) >0.95
+
 train<-raw_train[,many.NA==FALSE]
 
 # clean data: 2) removing column 1-5 (not relevant)
+
 train<-train[,-(1:5)]
 
 # clean data: 3) removing predictors with low variance
 zero.var<-nearZeroVar(train)
+
 train<-train[,-zero.var]
 
 # 54 variables remaining
 
 # data spliting
 inTrain<- createDataPartition(y=train$classe, p=0.7, list=FALSE)
+
 tr<-train[inTrain,]
+
 te<-train[-inTrain,]
 
-# random forest with standard control
+# random forest with standard control (be patient)
 modFit<- train(classe ~., data=tr,method="rf")
 
+# modFit$finalModel indicate error rate 0.18%
 
+#predict the test set
 
+pred<-predict(modFit,data=raw_test)
+
+# convert to character
+
+# predicted sequence for the 20 subjects:  "B" "A" "B" "A" "A" "E" "D" "B" "A" "A" "B" "C" "B" "A" "E" "E" "A" "B" "B" "B"
+
+# done
 
 
 
